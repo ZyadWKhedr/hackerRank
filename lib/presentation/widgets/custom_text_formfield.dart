@@ -14,7 +14,7 @@ class CustomTextFormField extends StatefulWidget {
   final double iconSize;
 
   const CustomTextFormField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.label,
     this.isPassword = false,
@@ -26,7 +26,7 @@ class CustomTextFormField extends StatefulWidget {
     this.borderColor = Colors.grey,
     this.iconColor = Colors.black,
     this.iconSize = 24.0,
-  }) : super(key: key);
+  });
 
   @override
   _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
