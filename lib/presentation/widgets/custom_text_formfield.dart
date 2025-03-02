@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackerrank/core/utils/app_dimentions.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
@@ -7,26 +8,22 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final IconData? prefixIcon;
-  final double fontSize;
   final Color textColor;
   final Color borderColor;
   final Color iconColor;
-  final double iconSize;
 
   const CustomTextFormField({
-    super.key,
+    Key? key,
     required this.controller,
     required this.label,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.prefixIcon,
-    this.fontSize = 16.0,
     this.textColor = Colors.black,
     this.borderColor = Colors.grey,
     this.iconColor = Colors.black,
-    this.iconSize = 24.0,
-  });
+  }) : super(key: key);
 
   @override
   _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
@@ -37,38 +34,54 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final dims = AppDimensions(context); // Create an instance
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: TextFormField(
-        controller: widget.controller,
-        obscureText: widget.isPassword ? _obscureText : false,
-        keyboardType: widget.keyboardType,
-        validator: widget.validator,
-        style: TextStyle(fontSize: widget.fontSize, color: widget.textColor),
-        decoration: InputDecoration(
-          labelText: widget.label,
-          labelStyle: TextStyle(fontSize: widget.fontSize, color: widget.textColor),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(color: widget.borderColor),
+      padding: EdgeInsets.symmetric(vertical: dims.height(0.015)), // 1.5% of height
+      child: SizedBox(
+        width: dims.width(0.9), // 90% of width
+        height: dims.height(0.07), // 7% of height
+        child: TextFormField(
+          controller: widget.controller,
+          obscureText: widget.isPassword ? _obscureText : false,
+          keyboardType: widget.keyboardType,
+          validator: widget.validator,
+          style: TextStyle(
+            fontSize: dims.fontSize(0.045), // 4.5% of width
+            color: widget.textColor,
           ),
-          prefixIcon: widget.prefixIcon != null
-              ? Icon(widget.prefixIcon, color: widget.iconColor, size: widget.iconSize)
-              : null,
-          suffixIcon: widget.isPassword
-              ? IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility,
+          decoration: InputDecoration(
+            labelText: widget.label,
+            labelStyle: TextStyle(
+              fontSize: dims.fontSize(0.04), // 4% of width
+              color: widget.textColor,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(dims.radius(0.03)), // 3% of width
+              borderSide: BorderSide(color: widget.borderColor),
+            ),
+            prefixIcon: widget.prefixIcon != null
+                ? Icon(
+                    widget.prefixIcon,
                     color: widget.iconColor,
-                    size: widget.iconSize,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                )
-              : null,
+                    size: dims.iconSize(0.06), // 6% of width
+                  )
+                : null,
+            suffixIcon: widget.isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: widget.iconColor,
+                      size: dims.iconSize(0.06), // 6% of width
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  )
+                : null,
+          ),
         ),
       ),
     );
