@@ -1,28 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hackerrank/core/utils/app_dimentions.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
-  final String label;
+  final String hintText;
   final bool isPassword;
   final TextInputType keyboardType;
-  final String? Function(String?)? validator;
-  final IconData? prefixIcon;
-  final Color textColor;
-  final Color borderColor;
-  final Color iconColor;
+  final IconData prefixIcon;
 
   const CustomTextFormField({
     Key? key,
     required this.controller,
-    required this.label,
+    required this.hintText,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
-    this.validator,
-    this.prefixIcon,
-    this.textColor = Colors.black,
-    this.borderColor = Colors.grey,
-    this.iconColor = Colors.black,
+    required this.prefixIcon,
   }) : super(key: key);
 
   @override
@@ -34,54 +25,37 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final dims = AppDimensions(context); // Create an instance
+    final theme = Theme.of(context); // Get the current theme
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: dims.height(0.015)), // 1.5% of height
-      child: SizedBox(
-        width: dims.width(0.9), // 90% of width
-        height: dims.height(0.07), // 7% of height
-        child: TextFormField(
-          controller: widget.controller,
-          obscureText: widget.isPassword ? _obscureText : false,
-          keyboardType: widget.keyboardType,
-          validator: widget.validator,
-          style: TextStyle(
-            fontSize: dims.fontSize(0.045), // 4.5% of width
-            color: widget.textColor,
-          ),
-          decoration: InputDecoration(
-            labelText: widget.label,
-            labelStyle: TextStyle(
-              fontSize: dims.fontSize(0.04), // 4% of width
-              color: widget.textColor,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(dims.radius(0.03)), // 3% of width
-              borderSide: BorderSide(color: widget.borderColor),
-            ),
-            prefixIcon: widget.prefixIcon != null
-                ? Icon(
-                    widget.prefixIcon,
-                    color: widget.iconColor,
-                    size: dims.iconSize(0.06), // 6% of width
-                  )
-                : null,
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: widget.iconColor,
-                      size: dims.iconSize(0.06), // 6% of width
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  )
-                : null,
-          ),
+    return TextFormField(
+      controller: widget.controller,
+      obscureText: widget.isPassword ? _obscureText : false,
+      keyboardType: widget.keyboardType,
+      style: TextStyle(color: theme.textTheme.bodyLarge!.color), // Text color
+      decoration: InputDecoration(
+        hintText: widget.hintText,
+        hintStyle: TextStyle(color: theme.textTheme.bodyMedium!.color), // Hint text color
+        filled: true,
+        fillColor: theme.inputDecorationTheme.fillColor, // Background color
+        prefixIcon: Icon(widget.prefixIcon, color: theme.iconTheme.color), // Prefix icon
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: theme.iconTheme.color,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+              )
+            : null,
+        border: theme.inputDecorationTheme.border, // Border style
+        enabledBorder: theme.inputDecorationTheme.border, // Border when enabled
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2), // Border color when focused
         ),
       ),
     );
